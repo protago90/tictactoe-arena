@@ -28,7 +28,7 @@ BAR  = '•‌ Games'
 WIN  = '•‌ Player "{}" wins the game!\033[91m END∎\n'
 END  = '•‌ The game is over with draw.\033[91m END∎\n'
 LF = '\n'
-NAP = 1.5
+NAP = 1.25
 
 
 def parse_args():
@@ -43,12 +43,13 @@ def parse_args():
     p.add_argument('-d', '--debug', action='store_true', required=False, 
                    help='Show search bot rationale.')   
     args = p.parse_args()
-    if any(idx == HumanUI.ID.lower() for idx in (args.x_player, args.o_player)):
-        p.error('Human participant is not valid in tournament mode.')
+    if args.n_games > 0:
+        if any(idx == HumanUI.ID.lower() for idx in (args.x_player, args.o_player)):
+            p.error('Human participant is not valid in tournament mode.')
     return args
 
 
-def show_intro(info: str, x_plyr: PlayerAPI, o_plyr: PlayerAPI) -> None:        
+def show_intro(info: str, x_plyr: PlayerAPI, o_plyr: PlayerAPI) -> None:
     x, o = x_plyr.ID, o_plyr.ID
     msg = [INTRO.format(info), GAME.format(x, o)]
     if any(idx == HumanUI.ID for idx in (x, o)): 
