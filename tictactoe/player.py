@@ -1,5 +1,5 @@
 # by protago90
-from board import BoardAPI
+from tictactoe.board import BoardAPI
 
 from abc import abstractmethod
 from typing import Callable, List, Optional, Tuple
@@ -152,9 +152,8 @@ class MinMaxBot(SearchBotAPI):
         )[0][0]
 
 
-class CustomBot(SearchBotAPI):
-    ID = 'Custom'
-
+class SearchBot(SearchBotAPI):
+    ID = 'Search'
     def __init__(self, sign: str, nap: Optional[float]=None) -> None:
         super().__init__(sign, nap)
 

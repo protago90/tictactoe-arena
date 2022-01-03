@@ -1,5 +1,6 @@
 # MAIN:
-tqdm==4.51.0  # optional for cli
+tqdm==4.51.0  # for cli (optional)
+# streamlit   # for server (vital)
 
 # DEV:
 # mypy==0.790

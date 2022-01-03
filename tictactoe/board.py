@@ -24,7 +24,7 @@ class BoardAPI():
         pass
 
     @abstractmethod
-    def get_open_poss(self) -> list:
+    def get_open_poss(self) -> List[int]:
         pass
     
     @abstractmethod
@@ -36,12 +36,12 @@ class BoardAPI():
         pass
 
 
-class TicTacToe(BoardAPI):
+class XOBoard(BoardAPI):
     EMPTY = '⠀' 
 
     def __init__(self, empty: str=EMPTY) -> None:
-        self._empty:  str = empty
-        self._board:  List[str] = [self._empty for _ in range(9)]
+        self._empty: str = empty
+        self._board: List[str] = [self._empty for _ in range(9)]
         self._record: List[int] = []
         self._winner: Optional[str] = None
 
