@@ -2,7 +2,7 @@
 from tictactoe.player import DebutsBot, HumanUI, MinMaxBot, PlayerAPI, RandomBot, SearchBot
 
 from collections import Counter
-from typing import Callable, List, Optional, Sequence, Tuple
+from typing import Callable, List, Optional, Tuple
 
 
 class PlayerFcty():
@@ -26,7 +26,7 @@ class PlayerFcty():
                 if not name.startswith('__') and callable(attr)]
 
 
-def recap_game_stats(rec: Sequence[str], x_plyr: PlayerAPI, o_plyr: PlayerAPI) -> Tuple[str, Tuple[int,int,int]]:
+def recap_game_stats(rec: List[Optional[str]], x_plyr: PlayerAPI, o_plyr: PlayerAPI) -> Tuple[Optional[str], Tuple[int,int,int]]:
     cum = Counter([win for win in rec])
     x, draw, o = (
         cum.get(sign, 0) for sign in (x_plyr.sign, None, o_plyr.sign))

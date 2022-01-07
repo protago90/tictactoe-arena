@@ -4,7 +4,7 @@ from tictactoe import HumanUI, PlayerAPI, PlayerFcty, recap_game_stats, XOBoard
 from argparse import ArgumentParser, Namespace
 from typing import Optional, Tuple, Iterable
 try: 
-    from tqdm import trange # type: ignore # install is optional
+    from tqdm import trange  # type: ignore # install is optional
 except: pass
 
 
