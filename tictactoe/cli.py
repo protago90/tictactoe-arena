@@ -1,8 +1,8 @@
 # by protago90
-from tictactoe import HumanUI, PlayerF, PlayerAPI
+from tictactoe import HumanUI, PlayerAPI, PlayerFcty, recap_game_stats, XOBoard
 
+from argparse import ArgumentParser, Namespace
 from typing import Optional, Tuple, Iterable
-import argparse
 try: 
     from tqdm import trange # type: ignore # install is optional
 except: pass
@@ -24,19 +24,21 @@ STAT = '•‌ Stats: "{}" {} -{}:{}:{}- {} "{}".'
 RULE = '•‌ (intefere with game board via numeric keybord.)'
 POS  = '•‌ Pick position 1-9: '
 PLYR = '•‌ "{}" moves:'
-BAR  = '•‌ Games'
-WIN  = '•‌ Player "{}" rec the game!\033[91m END∎\n'
+PBAR = '•‌ Games'
+WIN  = '•‌ Player "{}" wins the game!\033[91m END∎\n'
 END  = '•‌ The game is over with draw.\033[91m END∎\n'
+XSIGN = 'X'
+OSIGN = 'O'
 LF = '\n'
 NAP = 1.25
 
 
-def parse_args():
-    p = argparse.ArgumentParser()
-    plyrs = PlayerF.list()
-    p.add_argument('-x', '--x_player', type=str, default='custom', required=False, metavar='', choices=plyrs,
+def parse_args() -> Namespace:
+    p = ArgumentParser()
+    plyrs = PlayerFcty.get_plyrs_id()
+    p.add_argument('-x', '--x_player', type=str, default='debuts', required=False, metavar='', choices=plyrs,
                    help=f'"X" player: {plyrs}.')
-    p.add_argument('-o', '--o_player', type=str, default='custom', required=False, metavar='', choices=plyrs,
+    p.add_argument('-o', '--o_player', type=str, default='debuts', required=False, metavar='', choices=plyrs,
                    help=f'"O" player: {plyrs}.')
     p.add_argument('-n', '--n_games', type=int, default=0, required=False, metavar='',
                    help='N games in tournament.')
@@ -44,7 +46,7 @@ def parse_args():
                    help='Show search bot rationale.')   
     args = p.parse_args()
     if args.n_games > 0:
-        if any(idx == HumanUI.ID.lower() for idx in (args.x_player, args.o_player)):
+        if any(_id == HumanUI.ID for _id in (args.x_player, args.o_player)):
             p.error('Human participant is not valid in tournament mode.')
     return args
 
@@ -52,7 +54,7 @@ def parse_args():
 def show_intro(info: str, x_plyr: PlayerAPI, o_plyr: PlayerAPI) -> None:
     x, o = x_plyr.ID, o_plyr.ID
     msg = [INTRO.format(info), GAME.format(x, o)]
-    if any(idx == HumanUI.ID for idx in (x, o)): 
+    if any(_id == HumanUI.ID for _id in (x, o)): 
         msg.append(RULE)
         for a, b, c in [list(range(i*3+1, i*3+4)) for i in range(3)][::-1]:
             msg.append(BOARD.format(a, b, c))
@@ -74,7 +76,7 @@ def show_board(board: list, sign: str) -> None:
 
 
 def set_progress_bar(msg: str, n: int) -> Iterable:
-    if n >= 1 and 'trange' in globals().keys(): 
+    if n > 0 and 'trange' in globals().keys(): 
         return trange(n, desc=msg, leave=True)  # tqdm's external module
     return range(max(n, 1))
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # by protago90
-from tictactoe import PlayerF, recap_game_stats, XOBoard
+from tictactoe import PlayerFcty, recap_game_stats, XOBoard
 from tictactoe.cli import *  # precomposed cli scirpt utils
 
 
@@ -8,13 +8,13 @@ if __name__ == '__main__':
     args = parse_args()
     mode, p = TOURNAMENT, {}
     if args.n_games == 0: 
-        mode, p = PLAYGROUND, {'nap':NAP, 'human_api': get_human_move}
-    x_plyr = PlayerF.set(args.x_player, 'X', **p)
-    o_plyr = PlayerF.set(args.o_player, 'O', **p)
+        mode, p = PLAYGROUND, {'nap': NAP, 'human_api': get_human_move}
+    x_plyr = PlayerFcty.set(args.x_player, XSIGN, **p)
+    o_plyr = PlayerFcty.set(args.o_player, OSIGN, **p)
     
     show_intro(mode, x_plyr, o_plyr)
     rec = []
-    for _ in set_progress_bar(BAR, args.n_games):
+    for _ in set_progress_bar(PBAR, args.n_games):
         board = XOBoard()
         plyr = x_plyr
         plyr_n = o_plyr
