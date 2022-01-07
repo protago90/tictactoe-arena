@@ -93,4 +93,4 @@ class XOBoard(BoardAPI):
         return self._winner
 
     def is_open(self) -> bool:
-        return not self._winner and any(self.get_open_poss())
+        return not self._winner and len(self.get_open_poss()) > 0

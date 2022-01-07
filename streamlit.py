@@ -42,13 +42,13 @@ def init_session(x_id: str, o_id: str, mode: Optional[str]=None) -> None:
     ses.rec = []
 
 def exec_move_processor(pos: Optional[int]=None) -> None:
-    if ses.board.is_open() and (pos is not None or ses.plyr.ID != HumanUI.ID):
+    if not ses.rec and (pos is not None or ses.plyr.ID != HumanUI.ID):
         if ses.plyr.ID != HumanUI.ID:
             pos = ses.plyr.make_move(ses.board)
         ses.board.process_move(ses.plyr.sign, pos)
         ses.plyr, ses.plyr_n = ses.plyr_n, ses.plyr
         if not ses.board.is_open():
-            ses.rec = ses.board.get_winner()
+            ses.rec.append(ses.board.get_winner())
 
 def exec_tournament_processor() -> None:
     for i in range(NMIN, ses.n_games+1):
