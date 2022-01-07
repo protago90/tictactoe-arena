@@ -1,5 +1,5 @@
 # by protago90
-from board import BoardAPI
+from tictactoe.board import BoardAPI
 
 from abc import abstractmethod
 from typing import Callable, List, Optional, Tuple
@@ -8,9 +8,9 @@ import time
 
 
 class PlayerAPI():
-    SIGNS = ('X', 'O')  # TicTacToe's hardcoded signatures 
+    SIGNS = BoardAPI.SIGNS  # TicTacToe's board hardcoded signs
     NAP = 0
-    ID = 'None'
+    ID = 'none'
 
     def __init__(self, sign: str) -> None:
         if sign not in self.__class__.SIGNS:
@@ -23,7 +23,7 @@ class PlayerAPI():
 
 
 class HumanUI(PlayerAPI):
-    ID = 'Human'
+    ID = 'human'
 
     def __init__(self, sign: str, human_api: Callable) -> None:
         super().__init__(sign)
@@ -61,7 +61,7 @@ class BotAPI(PlayerAPI):
 
 
 class RandomBot(BotAPI):
-    ID = 'Random'
+    ID = 'random'
 
     def __init__(self, sign: str, nap: Optional[float]=None) -> None:
         super().__init__(sign, nap)
@@ -71,7 +71,7 @@ class RandomBot(BotAPI):
 
 
 class DebutsBot(BotAPI):
-    ID = 'Debuts'
+    ID = 'debuts'
 
     def __init__(self, sign: str, nap: Optional[float]=None) -> None:
         super().__init__(sign, nap)
@@ -131,7 +131,7 @@ class SearchBotAPI(BotAPI):
 
 
 class MinMaxBot(SearchBotAPI):
-    ID = 'Minmax'
+    ID = 'minmax'
 
     def __init__(self, sign: str, nap: Optional[float]=None) -> None:
         super().__init__(sign, nap)
@@ -152,8 +152,8 @@ class MinMaxBot(SearchBotAPI):
         )[0][0]
 
 
-class CustomBot(SearchBotAPI):
-    ID = 'Custom'
+class SearchBot(SearchBotAPI):
+    ID = 'search'
 
     def __init__(self, sign: str, nap: Optional[float]=None) -> None:
         super().__init__(sign, nap)

@@ -6,14 +6,12 @@ import random
 
 
 class BoardAPI():
+    EMPTY = '⠀'
+    SIGNS = ('X', 'O', EMPTY)
 
     @abstractmethod
     def get_state(self) -> List[List[str]]:
         pass    
-
-    @abstractmethod
-    def get_winner(self) -> Optional[str]:
-        pass
 
     @abstractmethod
     def process_move(self, sign: str, pos: int) -> None:
@@ -24,7 +22,7 @@ class BoardAPI():
         pass
 
     @abstractmethod
-    def get_open_poss(self) -> list:
+    def get_open_poss(self) -> List[int]:
         pass
     
     @abstractmethod
@@ -32,40 +30,36 @@ class BoardAPI():
         pass
 
     @abstractmethod
+    def get_winner(self) -> Optional[str]:
+        pass
+
+    @abstractmethod
     def is_open(self) -> bool:
         pass
 
 
-class TicTacToe(BoardAPI):
-    EMPTY = '⠀' 
+class XOBoard(BoardAPI):
 
-    def __init__(self, empty: str=EMPTY) -> None:
-        self._empty:  str = empty
-        self._board:  List[str] = [self._empty for _ in range(9)]
-        self._record: List[int] = []
+    def __init__(self, empty: Optional[str]=None) -> None:
+        self._empty: str = empty if empty else self.__class__.EMPTY
+        self._board: List[str] = [self._empty for _ in range(9)]
         self._winner: Optional[str] = None
-
-
-    def _get_rows(self, desc: bool=False) -> List[List[str]]:
-        rows = [self._board[i*3 : i*3+3] for i in range(3)]
-        return rows[::-1] if desc else rows
+        self._record: List[int] = []
 
     def get_state(self, desc: bool=True) -> List[List[str]]:
-        return self._get_rows(desc=desc)
-
-    def get_winner(self) -> Optional[str]:
-        return self._winner
+        rows = [self._board[i*3 : i*3+3] for i in range(3)]
+        return rows[::-1] if desc else rows
 
     @staticmethod
     def _is_win_line(vec: Sequence[str]) -> bool:
         return len(set(vec)) == 1
 
     def _is_win_state(self, pos: int) -> bool:
-        i = math.floor(pos/3)
-        if self._is_win_line(self._get_rows()[i]):
+        irow = math.floor(pos/3)
+        if self._is_win_line(self.get_state(desc=False)[irow]):
             return True
-        i = pos % 3
-        if self._is_win_line([self._board[i+j] for j in (0, 3, 6)]):
+        icol = pos % 3
+        if self._is_win_line([self._board[i+icol] for i in (0, 3, 6)]):
             return True
         for diag in ((0, 4, 8), (2, 4, 6)):
             if pos in diag:
@@ -86,13 +80,17 @@ class TicTacToe(BoardAPI):
         return [pos for pos, v in enumerate(self._board) if v == self._empty]
 
     def get_debuts_pos(self) -> int:
+        corn = (0, 2, 6, 8)
         poss = self.get_open_poss()
         if len(poss) == 9:
-           return 8  # random.choice([0, 2, 6, 8])
+           return random.choice(corn)
         if len(poss) == 8:
-           return 4 if 4 in poss else random.choice([2, 6])
-        # TODO: implement TicTacToe'a openning book for whole gameplay depth
+           return 4 if 4 in poss else random.choice([pos for pos in poss if pos in corn])
+        # TODO: implement TicTacToe's openning book for whole gameplay depth
         return random.choice(poss)
     
+    def get_winner(self) -> Optional[str]:
+        return self._winner
+
     def is_open(self) -> bool:
         return not self._winner and any(self.get_open_poss())
