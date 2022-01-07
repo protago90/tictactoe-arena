@@ -9,8 +9,8 @@ if __name__ == '__main__':
     mode, p = TOURNAMENT, {}
     if args.n_games == 0: 
         mode, p = PLAYGROUND, {'nap': NAP, 'human_api': get_human_move}
-    x_plyr = PlayerFcty.set(args.x_player, XSIGN, **p)
-    o_plyr = PlayerFcty.set(args.o_player, OSIGN, **p)
+    x_plyr = PlayerFcty.set(args.x_player, XSIGN, **p)  # type: ignore
+    o_plyr = PlayerFcty.set(args.o_player, OSIGN, **p)  # type: ignore
     
     show_intro(mode, x_plyr, o_plyr)
     rec = []

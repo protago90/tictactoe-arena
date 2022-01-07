@@ -1,7 +1,6 @@
 # MAIN:
-tqdm==4.51.0  # for cli (optional)
-# streamlit   # for server (vital)
+# tqdm==4.51.0    # for cli (optional)
+streamlit==1.3.1  # for server (vital) rather heavy..
 
 # DEV:
-# mypy==0.790
-# mypy-extensions==0.4.3
+# mypy==0.790     # mypy-extensions==0.4.3
