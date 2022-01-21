@@ -4,8 +4,12 @@ from tictactoe import HumanUI, PlayerFcty, recap_game_stats, XOBoard
 from PIL import Image
 from typing import Callable, Optional
 import streamlit as st
-ses = st.session_state  # streamlit's global session variable
 
+
+AUTHOR = 'Michal Gruszczyński'
+CONTACT = '[contact](https://www.linkedin.com/in/protago90/)'
+SOURCE = '[source-code](https://github.com/protago90/tictactoe-ring)'
+UNI = '[uni](https://www.math.uni.lodz.pl/)'
 
 PLAYGROUND = 'PLAYGROUND'
 TOURNAMENT = 'TOURNAMENT'
@@ -16,8 +20,10 @@ WIN  = 'Player "{}" wins the game!'
 END  = 'The game is over with draw.'
 VERSUS = '{} -vs- {}'
 LINE = '---'
+LINK = '🔗'
 PLAY = '▶︎'
 REP  = '↻'
+DOT  = '•‌'
 NULL = ''
 
 LOGO = 'misc/logo.png'
@@ -67,7 +73,12 @@ def show_intro() -> None:
     try:
         welcome = Image.open(LOGO)
         st.image(welcome)
-    except: pass
+    except: print('zonk')
+
+def show_meta() -> None:
+    st.sidebar.write('---')
+    st.sidebar.write(f'by {AUTHOR}')
+    st.sidebar.write(f'{CONTACT} {DOT} {SOURCE} {DOT} {UNI}')
 
 def show_plyrs_modes_ui() -> None:
     plyrs = PLYRS if ses.mode == PLAYGROUND else BOTS
@@ -100,7 +111,7 @@ def show_vs() -> None:
     if ses.mode == TOURNAMENT: 
         ses.bar = st.progress(0)
     st.write(LINE)
-    c = st.columns((.98, .27, 1))
+    c = st.columns((.99, .28, 1))
     c[1].write(VERSUS.format(
         *(HFACE if _id == HumanUI.ID else BFACE for _id in (ses.x_plyr.ID, ses.o_plyr.ID))))
 
@@ -135,8 +146,7 @@ def show_readme_app() -> None:
 
 
 st.set_page_config(page_title=XSIGN+OSIGN, page_icon=XLOGO, layout='centered')
-show_intro()
-if 'mode' not in ses: init_session(HumanUI.ID, BOT, mode=PLAYGROUND)  # TODO: rethink session init
+ses = st.session_state  # streamlit's global session variable
 
 APPS_REPO = {
     PLAYGROUND: show_playground_app,
@@ -146,6 +156,9 @@ APPS_REPO = {
 
 
 if __name__ == "__main__":
+    show_intro()
+    if 'mode' not in ses: init_session(HumanUI.ID, BOT, mode=PLAYGROUND)  # TODO: rethink session init
     st.sidebar.title('Menu:')
     app_name = st.sidebar.radio(NULL, list(APPS_REPO.keys()))
+    show_meta()
     APPS_REPO.get(app_name)()

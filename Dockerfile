@@ -10,4 +10,4 @@ EXPOSE 8501
 
 ENTRYPOINT ["streamlit", "run"]
 
-CMD ["streamlit.py"]
+CMD ["streamgui.py"]
